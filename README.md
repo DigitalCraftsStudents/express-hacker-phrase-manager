@@ -12,16 +12,68 @@ Navigate using the links to see the next phrase, and to see all phrases.
 
 On the `/all` route, show a count in an `<h2>` of how many phrases are in the "database"
 
+```js
+app.get('/all', (req, res) => {
+    res.render('all', {
+        locals: {
+            all: allPhrases,
+            howMany: allPhrases.length
+        }
+    })
+});
+```
+
+```js
+  <h2>Total number of phrases: ${howMany}</h2>
+```
 
 ## As a user, I should be able to see a number next to each phrase so that I know what order I created them in.
 
 Turn the unordered list into one that shows the order. (Hint: use a different HTML tag.)
 
+```js
+  <ol>
+    ${
+      all.map(phrase => `
+        <li>
+            ${phrase}
+        </li>
+      `).join('')
+    }
+  </ol>
+
+```
+
 ## As a user, I should be able to be able to see an individual phrase I created previously.
 
 On the `/all` route, make each phrase a clickable `<a href>`. When it is clicked, go to a new route `/show/:id`
 
+```js
+  <ol>
+    ${
+      all.map((phrase, i) => `
+        <li>
+          <a href="/show/${i}">
+            ${phrase}
+          </a>
+        </li>
+      `).join('')
+    }
+  </ol>
+```
+
 Using the `id` as the index, show only that one phrase.
+
+```js
+app.get('/show/:id', (req, res) => {
+    const { id } = req.params;
+    res.render('show', {
+        locals: {
+            phrase: allPhrases[id]
+        }
+    });
+});
+```
 
 ## As a user, I should be able to delete one of the phrases so I don't have to see ones I don't like.
 
@@ -34,6 +86,18 @@ Using the `id` as the index, remove that item from the Array of phrases.
 On that page, tell the user that the phrase has been deleted.
 
 Show them links to go back to `/all`.
+
+```js
+app.get('/show/:id', (req, res) => {
+    const { id } = req.params;
+    res.render('show', {
+        locals: {
+            phrase: allPhrases[id],
+            id
+        }
+    });
+});
+```
 
 
 # For the more curious

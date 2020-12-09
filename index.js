@@ -37,9 +37,26 @@ app.get('/next', (req, res) => {
 app.get('/all', (req, res) => {
     res.render('all', {
         locals: {
-            all: allPhrases
+            all: allPhrases,
+            howMany: allPhrases.length
         }
     })
+});
+
+app.get('/show/:id', (req, res) => {
+    const { id } = req.params;
+    res.render('show', {
+        locals: {
+            phrase: allPhrases[id],
+            id
+        }
+    });
+});
+
+app.get('/delete/:id', (req, res) => {
+    const { id } = req.params;
+    allPhrases.splice(id, 1);
+    res.render('deleted');
 });
 
 server.listen(PORT, HOST, () => {
